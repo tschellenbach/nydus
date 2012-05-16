@@ -27,9 +27,11 @@ dependency_links = [
 install_requires = [
 ]
 
+from nydus import VERSION
+
 setup(
     name='nydus',
-    version='0.8.2',
+    version=VERSION,
     author='David Cramer',
     author_email='dcramer@gmail.com',
     url='http://github.com/disqus/nydus',
