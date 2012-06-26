@@ -12,10 +12,13 @@ from redis import Redis as RedisClient
 from redis import RedisError
 
 from nydus.db.backends import BaseConnection, BasePipeline
+from redis.exceptions import ConnectionError 
+
+SILENT_EXCEPTIONS = frozenset([RedisError, ConnectionError])
 
 
 class RedisPipeline(BasePipeline):
-    silent_exceptions = frozenset([RedisError])
+    silent_exceptions = SILENT_EXCEPTIONS
     
     def __init__(self, connection):
         self.pending = []
@@ -41,8 +44,8 @@ class RedisPipeline(BasePipeline):
 
 
 class Redis(BaseConnection):
-    # Exceptions that can be retried by this backend
-    retryable_exceptions = frozenset([RedisError])
+    # Exceptions that can be retried and should fail silently
+    retryable_exceptions = SILENT_EXCEPTIONS
     supports_pipelines = True
 
     def __init__(self, host='localhost', port=6379, db=0, timeout=None, password=None, **options):
