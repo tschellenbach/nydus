@@ -67,7 +67,7 @@ class Redis(BaseConnection):
         return RedisClient(host=self.host, port=self.port, db=self.db, password=self.__password, socket_timeout=self.timeout)
 
     def disconnect(self):
-        self.connection.disconnect()
+        self.connection.connection_pool.disconnect()
 
     def get_pipeline(self, *args, **kwargs):
         return RedisPipeline(self)
