@@ -61,6 +61,9 @@ class PrefixPartitionRouter(BaseRouter):
         prefix_dict = defaultdict(list)
         for host_name, host in cluster.hosts.items():
             prefix = host.options.get('prefix')
+            if not prefix or not isinstance(prefix, basestring):
+                error_message = 'Every connection needs to specify a prefix, connection %s had prefix %s' % (host_name, prefix)
+                raise ValueError(error_message)
             prefix_dict[prefix].append(host)
             
         #check that we have a default
