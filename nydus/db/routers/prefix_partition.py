@@ -2,7 +2,8 @@ from nydus.db.routers import BaseRouter
 from collections import defaultdict
 from nydus.db.routers.keyvalue import ConsistentHashingRouter
 
-
+#caching for setting up hashing clusters
+hashing_clusters = {}
 
 class PrefixPartitionRouter(BaseRouter):
     '''
@@ -37,14 +38,19 @@ class PrefixPartitionRouter(BaseRouter):
         return key
     
     def _get_hashing_cluster(self, hosts):
-        from nydus.db.base import Cluster
-        from nydus.db.backends.redis import Redis
-        router = ConsistentHashingRouter
-        host_dict = dict((host.num, host) for host in hosts)
-        cluster = Cluster(
-            router=router,
-            hosts=host_dict,
-        )
+        key = tuple(hosts)
+        #memorization at the process/module level
+        cluster = hashing_clusters.get(key)
+        if not cluster:
+            from nydus.db.base import Cluster
+            from nydus.db.backends.redis import Redis
+            router = ConsistentHashingRouter
+            host_dict = dict((host.num, host) for host in hosts)
+            cluster = Cluster(
+                router=router,
+                hosts=host_dict,
+            )
+            hashing_clusters[key] = cluster
         return cluster
     
     def _route(self, cluster, attr, key, *args, **kwargs):

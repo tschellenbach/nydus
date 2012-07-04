@@ -39,11 +39,8 @@ class BaseRouter(object):
         if not key:
             return cluster.hosts.keys()
 
-        try:
-            db_nums = self._route(cluster, attr, key, *args, **kwargs)
-        except Exception, e:
-            self._handle_exception(e)
-            db_nums = []
+        #routing should never fail
+        db_nums = self._route(cluster, attr, key, *args, **kwargs)
 
         return self._post_routing(cluster, attr, key, db_nums, *args, **kwargs)
 
