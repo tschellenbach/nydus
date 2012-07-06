@@ -13,4 +13,4 @@ except Exception, e:
     VERSION = 'unknown'
 
 #Just make sure we don't clash with the source project
-VERSION = '10.0.7'
+VERSION = '10.1.0'

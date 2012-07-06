@@ -12,7 +12,7 @@ from redis import Redis as RedisClient
 from redis import RedisError
 
 from nydus.db.backends import BaseConnection, BasePipeline
-from redis.exceptions import ConnectionError 
+from redis.exceptions import ConnectionError
 
 SILENT_EXCEPTIONS = frozenset([RedisError, ConnectionError])
 
@@ -40,7 +40,6 @@ class RedisPipeline(BasePipeline):
                 raise
             
         return results
-        
 
 
 class Redis(BaseConnection):

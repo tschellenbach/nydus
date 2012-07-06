@@ -12,6 +12,7 @@ from nydus.utils import import_string, ThreadPool
 import logging
 logger = logging.getLogger(__name__)
 
+
 def create_cluster(settings):
     """
     redis = create_cluster({
@@ -89,7 +90,7 @@ class Cluster(object):
                     results.append(getattr(conn, attr)(*args, **kwargs))
                 except tuple(conn.retryable_exceptions), e:
                     #retry, raise an error or fail silently
-                    error = None
+                    error = e
                     if not self.router.retryable:
                         error = e
                     elif retry == self.max_connection_retries - 1:
@@ -106,8 +107,7 @@ class Cluster(object):
                         results = [None]
                         break
                     else:
-                        raise error
-                    
+                        raise
                     #going for another retry
                     logger.warn('retrying connection %s with command %s', conn, attr)
                     
